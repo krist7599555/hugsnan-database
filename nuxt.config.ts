@@ -1,7 +1,7 @@
 const pkg = require("./package");
 const resolve = require("path").resolve;
 
-module.exports = {
+export default {
   mode: "universal",
 
   /*
@@ -16,7 +16,7 @@ module.exports = {
     ],
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
   },
-
+  dev: process.env.NODE_ENV !== "production",
   /*
    ** Customize the progress-bar color
    */
