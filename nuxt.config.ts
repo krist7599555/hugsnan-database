@@ -2,8 +2,25 @@ const pkg = require("./package");
 const resolve = require("path").resolve;
 
 export default {
-  mode: "universal",
-
+  // mode: "universal",
+  mode: "spa",
+  srcDir: __dirname,
+  rootDir: __dirname,
+  modulesDir: resolve(__dirname, "node_modules"),
+  server: {
+    port: 3000, // default: 3000
+    host: "0.0.0.0", // default: localhost,
+    timing: false
+  },
+  transition: {
+    name: "fade",
+    mode: "out-in"
+  },
+  layoutTransition: {
+    name: "layout",
+    mode: "out-in"
+  },
+  storagePath: resolve(__dirname, "./storage"),
   /*
    ** Headers of the page
    */
@@ -25,12 +42,18 @@ export default {
   /*
    ** Global CSS
    */
-  css: [],
+  css: [resolve(__dirname, "./assets/scss/github-markdown.css")],
 
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [],
+  plugins: [
+    resolve(__dirname, "./plugins/vue-mavon-editor")
+    // {
+    // src: "./plugins/vue-mavon-editor.ts",
+    //   srr: false
+    // }
+  ],
 
   /*
    ** Nuxt.js modules
@@ -44,7 +67,7 @@ export default {
     "@nuxtjs/style-resources"
   ],
   styleResources: {
-    scss: [resolve(__dirname, "./assets/scss/main.scss")]
+    scss: [resolve(__dirname, "assets/scss/main.scss")]
   },
   /*
    ** Axios module configuration
@@ -52,6 +75,7 @@ export default {
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
   },
+  // buefy: { css: false, materialDesignIcons: false },
 
   /*
    ** Build configuration
@@ -61,5 +85,6 @@ export default {
      ** You can extend webpack config here
      */
     extend(config, ctx) {}
-  }
+  },
+  watch: ["server/**", "pages/**", "**.ts"]
 };

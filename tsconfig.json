@@ -12,9 +12,9 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./src",
-    "lib": ["es2015"]
+    "lib": ["es2015", "es2018", "dom"]
   },
-  "include": ["**/*.ts", "**/*.vue"],
+  "include": ["**/*.ts", "**/*.vue", "plugins/vue-mavon-editor.js"],
   "exclude": ["node_modules"],
   "typeRoots": ["node_modules/@types", "types"]
 }

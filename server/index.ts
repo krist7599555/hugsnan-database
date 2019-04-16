@@ -5,15 +5,19 @@ import * as mongo from "koa-mongo";
 import * as response from "koa-respond";
 import * as bodyParser from "koa-bodyparser";
 import * as cors from "koa2-cors";
-
+import * as send from "koa-send";
+import * as mount from "koa-mount";
+import { resolve } from "path";
 const consola = require("consola");
+const logger = require("koa-logger");
 
 import api from "./api/index";
-console.log(api.stack.map(i => i.path));
+import config from "../nuxt.config";
 
 const app = new Koa();
 app
   .use(cors())
+  // .use(logger())
   .use(
     mongo({
       host: "localhost",
@@ -25,12 +29,12 @@ app
       acquireTimeoutMillis: 100
     })
   )
+  .use(mount("/storage", ctx => send(ctx, ctx.path, { root: config.storagePath })))
   .use(response())
   .use(bodyParser())
   .use(api.routes())
   .use(api.allowedMethods());
 
-import config from "../nuxt.config";
 async function start() {
   const nuxt = new Nuxt(config);
   const {
@@ -59,4 +63,5 @@ async function start() {
   });
 }
 
+console.log(api.stack.map(i => i.path));
 start();

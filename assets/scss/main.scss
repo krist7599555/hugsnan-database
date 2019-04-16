@@ -69,6 +69,10 @@ $link-focus-border: $primary;
 
 // page transition
 
+.section {
+  background-color: white;
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.25s ease-out;
@@ -77,7 +81,6 @@ $link-focus-border: $primary;
 .fade-leave-to {
   opacity: 0;
 }
-
 .layout-enter-active,
 .layout-leave-active {
   transition: opacity 0.5s;
@@ -85,4 +88,23 @@ $link-focus-border: $primary;
 .layout-enter,
 .layout-leave-active {
   opacity: 0;
+}
+
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: transform 0.5s;
+  position: absolute;
+  width: 100vw;
+}
+.slide-left-enter {
+  transform: translateX(100%);
+  position: absolute;
+  width: 100vw;
+}
+.slide-right-enter {
+  transform: translateX(-100%);
+  position: absolute;
+  width: 100vw;
 }

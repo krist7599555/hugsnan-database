@@ -1,28 +1,40 @@
 import Router = require("koa-router");
 import * as _ from "lodash";
-import { nextTick } from "q";
+const mongo = require("koa-mongo");
+
 var router = new Router();
 
-const data = require("./data.json");
 router
   .prefix("/post")
   .get("/", ctx => {
     ctx.body = "OK";
   })
-  .use(async (ctx, next) => {
-    ctx.body = await data;
-    next();
+  .get("/all", async (ctx, next) => {
+    ctx.body = await ctx.db
+      .collection("posts")
+      .find()
+      .toArray();
   })
-  .get("/all", (ctx, next) => {
-    return;
+  .post("/create", async ctx => {
+    const body = ctx.request.body;
+    console.log(body);
+    const result = await ctx.db.collection("posts").insert(body);
+    const postId = result.ops[0]._id.toString();
+    ctx.body = (await ctx.db
+      .collection("posts")
+      .find({
+        _id: mongo.ObjectId(postId)
+      })
+      .toArray())[0];
   })
-  .get("/tags/:tags", (ctx, next) => {
-    ctx.body = _.filter(ctx.body, p => _.includes(p.tags, ctx.params.tags));
-    next();
-  })
-  .get("/:id", (ctx, next) => {
-    ctx.body = _.filter(ctx.body, p => p.id == ctx.params.id)[0];
-    next();
+  .get("/:id", async ctx => {
+    console.log(ctx.params.id);
+    ctx.body = (await ctx.db
+      .collection("posts")
+      .find({
+        _id: mongo.ObjectId(ctx.params.id)
+      })
+      .toArray())[0];
   })
   .use(ctx => {
     if (!ctx.body) ctx.noContent();
