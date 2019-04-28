@@ -15,71 +15,54 @@
 </template>
 <script>
 import axios from "axios";
-import * as _ from "lodash";
 import titleEditor from "@/components/title-editor.vue";
 import mdEditor from "@/components/md-editor.vue";
 
 export default {
-  name: "post-create",
+  name: "post-edit-id",
   components: {
     "md-editor": mdEditor,
     "title-editor": titleEditor
   },
+  async asyncData({ $axios, params }) {
+    const url = params.id;
+    const post = await $axios
+      .get(`/api/post/${url}`)
+      .then(res => res.data)
+      .then(data => {
+        data.date = new Date(data.date);
+        return data;
+      });
+    return post;
+  },
+  mounted() {
+    console.log(this.date);
+  },
   data() {
     return {
-      title: "",
-      url: "",
-      tags: [],
-      date: new Date(),
-      html: "",
-      markdown: "#### how to use mavonEditor in nuxt.js"
+      // title: "",
+      // url: "",
+      // tags: [],
+      // date: new Date(),
+      // html: "",
+      // markdown: "#### how to use mavonEditor in nuxt.js"
     };
   },
   methods: {
     submit() {
-      this.$nuxt.$router.push("/post");
       axios
-        .post("/api/post/create", this.submitData)
+        .post(`/api/post/edit/${this.$route.params.id}`, this.submitData)
         .then(res => res.data)
         .then(url => {
           this.$toast.open({
             type: "is-success",
             message: url
           });
-          const newpath = "/post/" + url;
-          console.log("router push");
-          // console.log(this.$nuxt.$router.p);
-          this.$router.push(newpath);
-          this.$router.push({
-            path: newpath
-          });
-          this.$router.push({
-            name: "post-id",
-            params: {
-              id: url
-            },
-            path: newpath
-          });
-          this.$nuxt.$router.push({
-            name: "post-id",
-            params: {
-              id: url
-            },
-            path: newpath
-          });
-          this.$nuxt.$router.push(newpath);
-          this.$nuxt.$router.push({
-            path: newpath
-          });
-          this.$nuxt._router.push(newpath);
-          this.$nuxt._router.push({
-            path: newpath
-          });
+          this.$router.push("/post/" + url);
         })
         .catch(err => {
-          console.error(err);
           this.$toast.open({
-            type: "is-danger",
+            type: "is-success",
             message: _.get(err.response, "data") || "error is occur"
           });
         });

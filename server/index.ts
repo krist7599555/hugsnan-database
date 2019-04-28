@@ -12,56 +12,43 @@ const consola = require("consola");
 const logger = require("koa-logger");
 
 import api from "./api/index";
-import config from "../nuxt.config";
+import config from "../nuxt.config.keep";
 
-const app = new Koa();
+var IS_NUXT_READY = false;
+
+const nuxt = new Nuxt(config);
+const {
+  host = process.env.HOST || "127.0.0.1",
+  port = process.env.PORT || 3000
+} = nuxt.options.server;
+
+export const app = new Koa();
 app
   .use(cors())
-  // .use(logger())
-  .use(
-    mongo({
-      host: "localhost",
-      port: 27017,
-      db: "test",
-      authSource: "admin",
-      max: 100,
-      min: 1,
-      acquireTimeoutMillis: 100
-    })
-  )
   .use(mount("/storage", ctx => send(ctx, ctx.path, { root: config.storagePath })))
   .use(response())
   .use(bodyParser())
+  .use(mongo(config.mongo))
   .use(api.routes())
-  .use(api.allowedMethods());
-
-async function start() {
-  const nuxt = new Nuxt(config);
-  const {
-    host = process.env.HOST || "127.0.0.1",
-    port = process.env.PORT || 3000
-  } = nuxt.options.server;
-
-  if (!process.env.SKIP_NUXT) {
-    if (config.dev) {
-      const builder = new Builder(nuxt);
-      await builder.build();
-    } else {
-      await nuxt.ready();
+  .use(api.allowedMethods())
+  .use(async ctx => {
+    if (!process.env.SKIP_NUXT && !IS_NUXT_READY) {
+      if (process.env.NODE_ENV != "production") {
+        const builder = new Builder(nuxt);
+        await builder.build();
+      } else {
+        await nuxt.ready();
+      }
+      IS_NUXT_READY = true;
     }
-    app.use(ctx => {
-      ctx.status = 200;
-      ctx.respond = false; // Bypass Koa's built-in response handling
-      nuxt.render(ctx.req, ctx.res);
-    });
-  }
+    ctx.status = 200;
+    ctx.respond = false; // Bypass Koa's built-in response handling
+    nuxt.render(ctx.req, ctx.res);
+  });
 
-  app.listen(+port, host);
+export const server = app.listen(+port, host, () =>
   consola.ready({
     message: `Server listening on http://${host}:${port}`,
     badge: true
-  });
-}
-
-console.log(api.stack.map(i => i.path));
-start();
+  })
+);

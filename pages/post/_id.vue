@@ -1,12 +1,16 @@
 <template>
   <section class="section" style="display: flex; justify-content: center;">
-    <div class="markdown-body" style="max-width: 600px">
+    <div class="markdown-body" style="max-width: 600px; min-width: 270px">
+      <nuxt-link :to="'/post/edit/' + url" style="float: right">
+        <button class="button">edit</button>
+      </nuxt-link>
+      <nuxt-link to="/post" style="float: right">
+        <button class="button">back</button>
+      </nuxt-link>
       <h1>{{title}}</h1>
-      <p>
-        <b-tag v-for="tag in tags" :key="tag">
-          <a @click="$router.push('/tags/' + tag)">{{tag}}</a>
-        </b-tag>
-      </p>
+      <div class="tags">
+        <nuxt-link class="tag" v-for="tag in tags" :key="tag" :to="'/tags/' + tag">{{tag}}</nuxt-link>
+      </div>
       <br>
       <p>{{date}}</p>
       <span v-html="html"></span>
@@ -18,17 +22,20 @@ import axios from "axios";
 
 export default {
   name: "post-id",
-  async asyncData({ params }) {
-    const data = await axios
+  async asyncData({ $axios, params }) {
+    console.log(params.id);
+    const data = await $axios
       .get("/api/post/" + params.id)
       .then(res => res.data);
-    const { title, tags, date, markdown, html } = data;
+
+    const { title, tags, date, markdown, html, url } = data;
     return {
       title,
       tags,
       date,
       markdown,
-      html
+      html,
+      url
     };
   }
 };

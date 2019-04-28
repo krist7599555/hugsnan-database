@@ -7,11 +7,6 @@ export default {
   srcDir: __dirname,
   rootDir: __dirname,
   modulesDir: resolve(__dirname, "node_modules"),
-  server: {
-    port: 3000, // default: 3000
-    host: "0.0.0.0", // default: localhost,
-    timing: false
-  },
   transition: {
     name: "fade",
     mode: "out-in"
@@ -33,7 +28,6 @@ export default {
     ],
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
   },
-  dev: process.env.NODE_ENV !== "production",
   /*
    ** Customize the progress-bar color
    */
@@ -48,10 +42,9 @@ export default {
    ** Plugins to load before mounting the App
    */
   plugins: [
-    { src: resolve(__dirname, "./plugins/vue-mavon-editor"), ssr: false },
+    resolve(__dirname, "./plugins/vue-mavon-editor"),
     resolve(__dirname, "./plugins/vue-moment"),
-    resolve(__dirname, "./plugins/vue-fortawesome"),
-    resolve(__dirname, "./plugins/vue-buefy")
+    resolve(__dirname, "./plugins/vue-fortawesome")
     // {
     // src: "./plugins/vue-mavon-editor.ts",
     //   srr: false
@@ -68,8 +61,25 @@ export default {
     "nuxt-buefy",
     "@nuxtjs/pwa",
     "@nuxtjs/style-resources",
-    "@nuxtjs/proxy"
+    "nuxt-fontawesome"
   ],
+  fontawesome: {
+    component: "fa",
+    imports: [
+      //import whole set
+      {
+        set: "@fortawesome/free-solid-svg-icons",
+        icons: ["fas"]
+      }
+      //import 2 icons from set
+      // please note this is PRO set in this example,
+      // you must have it in your node_modules to actually import
+      // {
+      //   set: "@fortawesome/pro-regular-svg-icons",
+      //   icons: ["faAdjust", "faArchive"]
+      // }
+    ]
+  },
   styleResources: {
     scss: [resolve(__dirname, "assets/scss/main.scss")]
   },
@@ -79,7 +89,10 @@ export default {
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
   },
-  // buefy: { css: false, materialDesignIcons: false },
+  buefy: {
+    css: false,
+    materialDesignIcons: false
+  },
 
   /*
    ** Build configuration
@@ -88,20 +101,6 @@ export default {
     /*
      ** You can extend webpack config here
      */
-    analyze: false,
-    cache: true,
-    devtools: true,
-    extractCSS: true,
-    loaders: {
-      ts: {
-        transpileOnly: true,
-        appendTsSuffixTo: [/\.vue$/]
-      }
-    },
-    parallel: true,
-    hardSource: true,
-    // or
-
     extend(config, ctx) {}
   },
   watch: ["server/**", "pages/**", "**.ts"],
@@ -114,9 +113,5 @@ export default {
     min: 1,
     acquireTimeoutMillis: 10000,
     idleTimeoutMillis: 30000
-  },
-  proxy: {
-    "/api": "http://localhost:3001",
-    ws: true
   }
 };

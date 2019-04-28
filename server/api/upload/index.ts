@@ -4,7 +4,7 @@ import { nextTick } from "q";
 const serve = require("koa-static");
 const mount = require("koa-mount");
 const multer = require("koa-multer");
-import config from "../../../nuxt.config";
+import config from "../../../nuxt.config.keep";
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {

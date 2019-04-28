@@ -83,3 +83,5 @@ dist
 # Service worker
 sw.*
 yarn.lock
+storage/*.jpg
+yarn.lock
