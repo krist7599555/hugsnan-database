@@ -1,6 +1,11 @@
 const { resolve } = require("path")
 const pkg = require("./package")
 module.exports = {
+  /*
+  Krist Custom
+  */
+  storagePath: resolve(__dirname, "./storage"),
+
   mode: "universal",
 
   /*
@@ -24,12 +29,17 @@ module.exports = {
   /*
    ** Global CSS
    */
-  css: [],
+  css: [resolve(__dirname, "./assets/scss/github-markdown.css")],
 
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [],
+  plugins: [
+    { src: resolve(__dirname, "./plugins/vue-mavon-editor"), ssr: false },
+    resolve(__dirname, "./plugins/vue-moment"),
+    resolve(__dirname, "./plugins/vue-fortawesome"),
+    resolve(__dirname, "./plugins/vue-buefy")
+  ],
 
   /*
    ** Nuxt.js modules
@@ -39,17 +49,31 @@ module.exports = {
     "@nuxtjs/axios",
     // Doc: https://buefy.github.io/#/documentation
     "nuxt-buefy",
-    "@nuxtjs/pwa"
+    "@nuxtjs/pwa",
+    "@nuxtjs/style-resources"
   ],
+  styleResources: {
+    scss: [resolve(__dirname, "assets/scss/main.scss")]
+  },
   /*
    ** Axios module configuration
    */
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
   },
-
-  // buildDir: resolve(__dirname, "dist-frontend"),
+  watch: ["pages/**"],
+  mongo: {
+    host: "localhost",
+    port: 27017,
+    db: "hugsnan",
+    authSource: "admin",
+    max: 100,
+    min: 1,
+    acquireTimeoutMillis: 10000,
+    idleTimeoutMillis: 30000
+  },
   buildDir: resolve(__dirname, "dist-frontend"),
+  // buildDir: resolve(__dirname, "dist-frontend"),
   /*
    ** Build configuration
    */

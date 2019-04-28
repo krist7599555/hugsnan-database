@@ -82,3 +82,6 @@ dist
 
 # Service worker
 sw.*
+.DS_Store
+dist-frontend
+dist-backend

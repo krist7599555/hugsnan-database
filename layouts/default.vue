@@ -26,17 +26,23 @@ export default {
     return {
       items: [
         {
-          title: 'Home',
-          icon: 'home',
-          to: { name: 'index' }
+          title: "Home",
+          icon: "home",
+          to: { name: "index" }
         },
         {
-          title: 'Inspire',
-          icon: 'lightbulb',
-          to: { name: 'inspire' }
+          title: "Post",
+          icon: "lightbulb",
+          to: { name: "post" }
         }
       ]
     }
   }
 }
 </script>
+
+<style scoped>
+.menu-list a.is-active {
+  background-color: #167df0;
+}
+</style>
