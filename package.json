@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon --exec babel-node server/index.js --watch server",
+    "production": "yarn build:production && yarn upload",
     "build:production": "yarn build:backend && yarn build:frontend && yarn copy:dist && rm -rf ./dist-frontend ./dist-backend",
     "copy:dist": "rm -rf ./dist && mkdir dist && cp -r ./dist-frontend ./dist-backend ./nuxt.config.js ./package.json ./dist",
     "build:frontend": "nuxt build",

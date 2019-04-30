@@ -130,19 +130,22 @@ export default Vue.extend({
       })
         .then(result => {
           const url = result.data;
-          this.$refs["mavon-editor"].$img2Url(pos, url);
+          this.$refs["mavon"].$img2Url(pos, url);
           this.$toast.open({
             type: "is-success",
             message: "upload image success"
           });
-          loadingComponent.close();
         })
         .catch(err => {
+          console.error(err)
           this.$toast.open({
             type: "is-danger",
             message: _.get(err.response, "data") || "error when upload"
           });
-        });
+        })
+        .finally(() => {
+          loadingComponent.close();
+        })
       this.$nuxt.$loading.finish();
     }
   }

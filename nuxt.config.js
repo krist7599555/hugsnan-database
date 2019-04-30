@@ -1,10 +1,23 @@
 const { resolve } = require("path")
 const pkg = require("./package")
+
+const baseURL =
+  process.env.NODE_ENV == "production"
+    ? "https://data.hugsnan.ml"
+    : "http://localhost:3000"
+const storagePath =
+  process.env.NODE_ENV == "production"
+    ? "/root/filesharing/hugsnan"
+    : resolve(__dirname, "./storage")
+
 module.exports = {
   /*
   Krist Custom
   */
-  storagePath: resolve(__dirname, "./storage"),
+  storagePath,
+  env: {
+    baseURL
+  },
 
   mode: "universal",
 
@@ -59,6 +72,8 @@ module.exports = {
    ** Axios module configuration
    */
   axios: {
+    proxy: true
+    // baseURL
     // See https://github.com/nuxt-community/axios-module#options
   },
   watch: ["pages/**"],

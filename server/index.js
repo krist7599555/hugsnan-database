@@ -5,7 +5,7 @@ import config from "../nuxt.config.js"
 import api from "./api"
 const cors = require("koa2-cors")
 const mount = require("koa-mount")
-
+const send = require("koa-send")
 const app = new Koa()
 
 config.dev = !(app.env === "production")
