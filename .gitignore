@@ -85,3 +85,4 @@ sw.*
 yarn.lock
 storage/*.jpg
 yarn.lock
+.DS_Store
